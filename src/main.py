@@ -2,6 +2,7 @@ import csv
 import argparse
 import random
 import itertools
+import datetime
 from janome.tokenizer import Tokenizer
 from functools import reduce
 
@@ -9,7 +10,7 @@ from wordnet import Wordnet
 
 parser = argparse.ArgumentParser(description="1行ずつファイルを読み取って類義語のtextをたくさん作る")
 parser.add_argument('--inputpath', help='テキストのinputファイルパス.デフォルトは./input.csv', default='./input.csv')
-parser.add_argument('--outputpath', help='テキストのoutputファイルパス.デフォルトは./output.csv', default='./output.csv')
+parser.add_argument('--outputpath', help='テキストのoutputファイルパス.デフォルトは./今日の日付.csv', default='./{}.csv'.format(str(datetime.datetime.today().strftime("%Y%m%d") + '_poems')))
 parser.add_argument('--dbpath', help='dbデータのpath.デフォルトは./wnjpn.db', default='./wnjpn.db')
 parser.add_argument('--multi', help='倍数デフォルトは10', default=10)
 
@@ -48,6 +49,7 @@ if __name__ == '__main__':
             create_texts.extend(list(set(synonyms_texts)))
             # 1行だけ試したい場合は下記breakをつけておく。全行試すならbreakをコメントアウト
             #break
+    random.shuffle(create_texts)
     with open(output_path, mode='w') as f:
         output_text = reduce(lambda text1, text2: text1 + '\n' + text2, create_texts)
         f.write(output_text)
